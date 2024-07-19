@@ -1,8 +1,8 @@
 <?php
 $app->get('/plugins/autoOrganizr/settings', function ($request, $response, $args) {
-	autoOrganizrPlugin = new autoOrganizrPlugin();
-	if (autoOrganizrPlugin->checkRoute($request)) {
-		if (autoOrganizrPlugin->qualifyRequest(1, true)) {
+	$autoOrganizrPlugin = new autoOrganizrPlugin();
+	if ($autoOrganizrPlugin->checkRoute($request)) {
+		if ($autoOrganizrPlugin->qualifyRequest(1, true)) {
 			$GLOBALS['api']['response']['data'] = autoOrganizrPlugin->_autoOrganizrPluginGetSettings();
 		}
 	}
