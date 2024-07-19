@@ -18,11 +18,95 @@ $GLOBALS['plugins']['autoOrganizr'] = array( // Plugin Name
 
 class autoOrganizrPlugin extends Organizr
 {
+	public function _autoOrganizrPluginSyncTabs()
+	{
+		// TODO: how can we know we are referencing a tab based on container? i.e removal/name change
+		$containers = $this->getDockerContainers();
+		print_r($containers);
+
+		$tabs = $this->mapContainersToTabs($containers);
+
+		print_r($tabs);
+
+		$containers = [
+			[
+			"name" => "test", 
+			"url" => "url",
+			"group_id" => "group_id",
+			'category_id' => 'category_id',
+			'enabled' => 'enabled',
+			'default' => 'default',
+			'type' => 'type',
+			'order' => 'order',
+			'image' => 'image'
+			]
+			];
+
+		$existingTabs = $this->getAllTabs()["tabs"];
+		foreach ($containers as $container) {
+			$foundTabs = array_filter($existingTabs, function($obj) use ($container) {
+				return $obj["name"] == $container["name"];
+			});
+			$foundTab = reset($foundTabs);
+
+			if ($foundTab) {
+				$this->updateTab($foundTab["id"], $container);
+				continue;
+			} 
+			$this->addTab($container);
+		}
+	}
+
+	const LABEL_PREFIX = "organizr.tab";
+	private function getDockerContainers() {
+		// TODO: make host+port configurable
+		$response = Requests::get("http://docker:2375/containers/json");
+		if ($response->success) {
+			$containers = array_map(function($container) {
+				// TODO: grab the first external port, use a new env of default domain
+				//	TODO: only do this if url isnt provided
+				// TODO: net.unraid.docker.icon use this for image if exist and image wasnt provided
+				$labels = array_filter($container["Labels"], function( $val, $key) {
+					return str_contains($key, "organizr");
+				}, ARRAY_FILTER_USE_BOTH);
+				return [
+					"name" => ltrim(reset($container["Names"]), "/"),
+					"labels" => $labels,
+				];
+			}, json_decode($response->body,true));
+			return array_filter($containers, function($container) {
+				return array_key_exists(self::LABEL_PREFIX.".enabled", $container["labels"]);
+			});
+		} else {
+			$this->logger->warning('Unable to query docker',$response);
+			$this->setResponse(409, 'Docker socket error');
+			return false; 
+		}
+	}
+
+	private function mapContainersToTabs($containers) {
+		return array_map(function($container) {
+			return array_filter([
+				"name" => $container["name"], 
+				"url" => $container["self::LABEL_PREFIX.url"],
+				"group_id" => $container["self::LABEL_PREFIX.group_id"],
+				'category_id' => $container["self::LABEL_PREFIX.category_id"],
+				'enabled' => $container[self::LABEL_PREFIX.".enabled"],
+				'default' => $container["self::LABEL_PREFIX.default"],
+				'type' => $container["self::LABEL_PREFIX.type"],
+				'order' => $container["self::LABEL_PREFIX.order"],
+				'image' => $container["self::LABEL_PREFIX.image"]
+			]);
+		}, $containers);
+	}
+
 	public function _autoOrganizrPluginGetSettings()
 	{
 		return array(
 			'About' => array (
-				$this->settingsOption('notice', '', ['title' => 'Information', 'body' => '
+				$this->settingsOption('notice', '', [
+				'title' => 'Information', 
+				'body' => '
 				<h3 lang="en">Plugin Information</h3>
 				<p>TODO</p>
 			']),
