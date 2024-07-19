@@ -5,7 +5,7 @@ $('body').arrive('#activeInfo', {onceOnly: true}, function() {
 });
 // FUNCTIONS
 function autoOrganizrPluginLaunch(){
-	organizrAPI2('GET','api/v2/plugins/autoOrganizr/launch').success(function(data) {
+	organizrAPI2('GET','api/v2/plugins/autoorganizr/launch').success(function(data) {
 		try {
 			var menuList = `<li><a href="javascript:void(0)" onclick="toggleAutoOrganizrPlugin();"><i class="fa fa-tv fa-fw"></i> <span lang="en">autoOrganizr</span></a></li>`;
 			$('.append-menu').after(menuList);
@@ -28,6 +28,14 @@ function toggleAutoOrganizrPlugin(){
 		content: createElementFromHTML(div),
 		button: false,
 		className: 'orgAlertTransparent',
+	});
+	AutoOrganizrPluginSyncTabs();
+}
+function AutoOrganizrPluginSyncTabs(){
+	organizrAPI2('GET','api/v2/plugins/autoorganizr/synctabs').success(function(data) {
+		$('.loadingautoOrganizr').remove();
+	}).fail(function(xhr) {
+		OrganizrApiError(xhr);
 	});
 }
 // EVENTS and LISTENERS
