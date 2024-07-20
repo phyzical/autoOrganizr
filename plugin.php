@@ -258,7 +258,7 @@ class autoOrganizrPlugin extends Organizr
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-defaultDomain', ['label' => 'Default domain to be used when auto guessing urls']),
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-dockerProxyHost', ['label' => 'Docker proxy host to use to auto discover containers']),
 				$this->settingsOption('enable', self::PLUGIN_PREFIX . '-cronRunEnabled', ['label' => 'Enable the cron run']),
-				$this->settingsOption('input', self::PLUGIN_PREFIX . '-cronRunSchedule', ['label' => 'Enter a cron schedule i.e <code class="hidden-xs">0 * * *</code> for once an hour ']),
+				$this->settingsOption('input', self::PLUGIN_PREFIX . '-cronRunSchedule', ['label' => 'Enter a cron schedule, default is once an hour']),
 			),
 		);
 	}
