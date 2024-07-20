@@ -193,23 +193,23 @@ class autoOrganizrPlugin extends Organizr
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.enabled</th>
 						<th>This is the bare minimum label to start creating a tab</th>
-						<th><code class="elip hidden-xs">false</code></th>
+						<th><code class="hidden-xs">false</code></th>
 						<th>true</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.image</th>
 						<th>This is the Image to use for the tab</th>
 						<th>
-							Defaults to <code class="elip hidden-xs">net.unraid.docker.icon</code> label otherwise 
-							<code class="elip hidden-xs">null</code> if not provided
+							Defaults to <code class="hidden-xs">net.unraid.docker.icon</code> label otherwise 
+							<code class="hidden-xs">null</code> if not provided
 						</th>
-						<th>Only if <code class="elip hidden-xs">net.unraid.docker.icon</code> doesn\'t exist</th>
+						<th>Only if <code class="hidden-xs">net.unraid.docker.icon</code> doesn\'t exist</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.url</th>
 						<th>The url to use for the tab</th>
 						<th>
-							If Domain is set defaults to <code class="elip hidden-xs">https://{container_name}.{DOMAIN}</code>
+							If Domain is set defaults to <code class="hidden-xs">https://{container_name}.{DOMAIN}</code>
 							otherwise it is required
 						</th>
 						<th>Only if domain isn\'t set</th>
@@ -217,37 +217,37 @@ class autoOrganizrPlugin extends Organizr
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.name</th>
 						<th>The name of the tab</th>
-						<th><code class="elip hidden-xs">{container_name}</code></th>
+						<th><code class="hidden-xs">{container_name}</code></th>
 						<th>false</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.local_url</th>
 						<th>The local url to use for the tab</th>
-						<th>Defaults to <code class="elip hidden-xs">http://{container_name}:{FIRST_LOCAL_PORT}</code></th>
+						<th>Defaults to <code class="hidden-xs">http://{container_name}:{FIRST_LOCAL_PORT}</code></th>
 						<th>false</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.group_id</th>
 						<th>This is the id of the group to be added</th>
-						<th><code class="elip hidden-xs">null</code></th>
+						<th><code class="hidden-xs">null</code></th>
 						<th>false</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.default</th>
 						<th>This is the default</th>
-						<th><code class="elip hidden-xs">null</code></th>
+						<th><code class="hidden-xs">null</code></th>
 						<th>false</th>
 					</tr>
 					<tr>
 						<th>' . self::LABEL_PREFIX . '.type</th>
-						<th>The type of tab can provide <code class="elip hidden-xs">organizr, iframe or newWindow</code></th>
-						<th><code class="elip hidden-xs">iframe</code></th>
+						<th>The type of tab can provide <code class="hidden-xs">organizr, iframe or newWindow</code></th>
+						<th><code class="hidden-xs">iframe</code></th>
 						<th>false</th>
 					</tr>
 						<tr>
 						<th>' . self::LABEL_PREFIX . '.order</th>
 						<th>This is the order of the tab</th>
-						<th><code class="elip hidden-xs">null</code></th>
+						<th><code class="hidden-xs">null</code></th>
 						<th>false</th>
 					</tr>
 				</table>
@@ -258,7 +258,7 @@ class autoOrganizrPlugin extends Organizr
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-defaultDomain', ['label' => 'Default domain to be used when auto guessing urls']),
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-dockerProxyHost', ['label' => 'Docker proxy host to use to auto discover containers']),
 				$this->settingsOption('enable', self::PLUGIN_PREFIX . '-cronRunEnabled', ['label' => 'Enable the cron run']),
-				$this->settingsOption('input', self::PLUGIN_PREFIX . '-cronRunSchedule', ['label' => 'Enter a cron schedule i.e <code class="elip hidden-xs">0 * * *</code> for once an hour ']),
+				$this->settingsOption('input', self::PLUGIN_PREFIX . '-cronRunSchedule', ['label' => 'Enter a cron schedule i.e <code class="hidden-xs">0 * * *</code> for once an hour ']),
 			),
 		);
 	}
