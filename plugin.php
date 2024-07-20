@@ -16,6 +16,13 @@ $GLOBALS['plugins']['autoOrganizr'] = array( // Plugin Name
 	'homepage' => false // Is plugin for use on homepage? true or false
 );
 
+$GLOBALS['cron'][] = [
+	'class' => 'autoOrganizrPlugin', // Class name of plugin (case-sensitive)
+	'enabled' => 'AUTOORGANIZR-cronRunEnabled', // Config item for job enable
+	'schedule' => 'AUTOORGANIZR-cronRunSchedule', // Config item for job schedule
+	'function' => '_autoOrganizrPluginSyncTabs', // Function to run during job
+];
+
 class autoOrganizrPlugin extends Organizr
 {
 	public function _autoOrganizrPluginSyncTabs()
@@ -250,6 +257,8 @@ class autoOrganizrPlugin extends Organizr
 			'Plugin Settings' => array(
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-defaultDomain', ['label' => 'Default domain to be used when auto guessing urls']),
 				$this->settingsOption('input', self::PLUGIN_PREFIX . '-dockerProxyHost', ['label' => 'Docker proxy host to use to auto discover containers']),
+				$this->settingsOption('boolean', self::PLUGIN_PREFIX . '-cronRunEnabled', ['label' => 'Enable the cron run']),
+				$this->settingsOption('input', self::PLUGIN_PREFIX . '-cronRunSchedule', ['label' => 'Enter a cron schedule i.e `0 * * *` for once an hour ']),
 			),
 		);
 	}
@@ -263,14 +272,4 @@ class autoOrganizrPlugin extends Organizr
 		}
 		$this->setResponse(401, 'User not approved for plugin');
 	}
-
-	// public function _autoOrganizrCron()
-	// {
-	// 	$plugin = new autoOrganizrPlugin();
-	// 	while(true) {
-	// 		$plugin->_autoOrganizrPluginSyncTabs();
-	// 		sleep(60);
-	// 	}
-	// }
-
 }

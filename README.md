@@ -12,6 +12,7 @@ To run after installing simply click the new menu item
 Configuration is just a matter of using the following labels:
 ![alt text](images/labels.png)
 
+Assumes usage of the [docker proxy server](https://github.com/linuxserver/docker-socket-proxy)
+
 TODO:
-Implement a cron
 Support docker socket bind?
