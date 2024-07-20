@@ -21,6 +21,7 @@ $app->get('/plugins/autoorganizr/launch', function ($request, $response, $args) 
 		->withHeader('Content-Type', 'application/json;charset=UTF-8')
 		->withStatus($GLOBALS['responseCode']);
 });
+
 $app->get('/plugins/autoorganizr/synctabs', function ($request, $response, $args) {
 	$autoOrganizrPlugin = new autoOrganizrPlugin();
 	if ($autoOrganizrPlugin->checkRoute($request)) {

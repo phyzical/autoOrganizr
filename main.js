@@ -16,6 +16,7 @@ function autoOrganizrPluginLaunch() {
 		OrganizrApiError(xhr);
 	});
 }
+
 function toggleAutoOrganizrPlugin() {
 	let div = `
 		<div class="panel bg-org panel-info" id="autoOrganizr-area">

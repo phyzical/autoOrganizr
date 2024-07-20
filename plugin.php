@@ -262,6 +262,15 @@ class autoOrganizrPlugin extends Organizr
 			return true;
 		}
 		$this->setResponse(401, 'User not approved for plugin');
-		return false;
 	}
+
+	// public function _autoOrganizrCron()
+	// {
+	// 	$plugin = new autoOrganizrPlugin();
+	// 	while(true) {
+	// 		$plugin->_autoOrganizrPluginSyncTabs();
+	// 		sleep(60);
+	// 	}
+	// }
+
 }
