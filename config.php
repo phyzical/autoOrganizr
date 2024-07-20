@@ -5,4 +5,6 @@
  */
 return array(
 	'AUTOORGANIZR-enabled' => false,
+	'AUTOORGANIZR-defaultDomain' => null,
+	'AUTOORGANIZR-dockerProxyHost' => "http://docker:2375",
 );

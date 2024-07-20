@@ -1,22 +1,16 @@
-.progress {
-    height: 20px;
-    position: relative;
-    border-radius: 10px;
-}
-.progress span {
-    position: absolute;
-    display: block;
-    width: 100%;
-    border-radius: 10px;
-}
-.progress-bar-title {
-  position: absolute;
-  text-align: center;
-  line-height: 20px; /* line-height should be equal to bar height */
-  border-radius: 10px;
-  overflow: hidden;
-  color: #fff;
-  right: 0;
-  left: 0;
-  top: 0;
+.autoOrganizr {
+  table {
+    border-collapse: collapse; 
+    width: 100%; 
+  }
+  
+  th, td {
+    border: 1px solid #f2f2f2; /* Adds a solid black border around each table header and cell */
+    padding: 8px; /* Adds space between the cell content and its borders */
+    text-align: left; /* Optional: Aligns the text to the left of the cell */
+  }
+  
+  th {
+    background-color: black ; /* Optional: Sets a background color for the table headers */
+  }
 }
