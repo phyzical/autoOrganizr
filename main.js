@@ -54,7 +54,12 @@ function AutoOrganizrPluginSyncTabs() {
 		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th></tr>`).join("");
 		$('#autoOrganizrTableList table').append(items);
 		$('#autoOrganizrTableList').removeClass("hidden")
-	}).fail(function (xhr) {
+	}).fail(function ({ response: { data, message } }) {
+		$('.loadingautoOrganizr').remove();
+		$('#autoOrganizrTableList table').append(`<h3>Error: ${message}</h3>`);
+		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th></tr>`).join("");
+		$('#autoOrganizrTableList table').append(items);
+		$('#autoOrganizrTableList').removeClass("hidden")
 		OrganizrApiError(xhr);
 	});
 }
