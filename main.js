@@ -55,10 +55,9 @@ function AutoOrganizrPluginSyncTabs() {
 		$('#autoOrganizrTableList table').append(items);
 		$('#autoOrganizrTableList').removeClass("hidden")
 	}).fail(function (res) {
-		console.dir(res)
 		const { response: { message, data } } = res.responseJSON;
 		console.dir(message)
-		console.dir(medatassage)
+		console.dir(data)
 
 		$('.loadingautoOrganizr').remove();
 		$('#autoOrganizrTableList table').append(`<h3>Error: ${message}</h3>`);
