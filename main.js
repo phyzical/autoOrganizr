@@ -29,7 +29,7 @@ function toggleAutoOrganizrPlugin() {
 						<h2 class="text-center loadingautoOrganizr" lang="en"><i class="fa fa-spin fa-spinner"></i></h2>
 						<div class="table-responsive autoOrganizrTableList hidden" id="autoOrganizrTableList">
 							<h3 class="text-center" lang="en">Actions</h3>
-							<p class="text-center"> If Unmanaged, you need to manually remove the tab to allow management</p>
+							<p class="text-center"> If Unmanaged, you need to manually remove the tab or add it to the AutoOrganizr category to allow management</p>
 							<table class="table color-bordered-table purple-bordered-table text-left">
 								<tr>
 									<th>Name</th>

@@ -50,7 +50,7 @@ class autoOrganizrPlugin extends Organizr
 			$foundTab = reset($foundTabs);
 			if ($foundTab) {
 				$this->updateTab($foundTab["id"], $tab);
-				array_push($actions, ["type" => "UnManaged", "name" => $tab["name"]]);
+				array_push($actions, ["type" => "Unmanaged", "name" => $tab["name"]]);
 				continue;
 			}
 
@@ -142,36 +142,69 @@ class autoOrganizrPlugin extends Organizr
 	private function mapContainersToTabs($containers)
 	{
 		return array_map(function ($container) {
-			$type = $container[self::LABEL_PREFIX . ".type"];
-			if ($type) {
-				switch ($type) {
-					case "organizr":
-						$type = 0;
-						break;
-					case "iframe":
-						$type = 1;
-						break;
-					case "newWindow":
-						$type = 2;
-						break;
-					default:
-						$type = 1;
-				}
-			}
-
 			return array_filter([
 				"name" => $container[self::LABEL_PREFIX . ".name"] ?: $container["name"],
 				"url" => $container[self::LABEL_PREFIX . ".url"] ?: $container["url"],
 				"local_url" => $container[self::LABEL_PREFIX . ".local_url"] ?: $container["local_url"],
-				"group_id" => $container[self::LABEL_PREFIX . ".group_id"],
+				"min_group_id" => $this->convertGroup($container[self::LABEL_PREFIX . ".min_group_id"]) || 0,
+				"max_group_id" => $this->convertGroup($container[self::LABEL_PREFIX . ".max_group_id"]) || 0,
 				'category_id' => $this->findOrCreateAutoOrganizrCategoryID(),
 				'enabled' => $container[self::LABEL_PREFIX . ".enabled"] || true,
 				'default' => $container[self::LABEL_PREFIX . ".default"],
-				'type' => $type,
+				'type' => $this->convertType($container[self::LABEL_PREFIX . ".type"]) || 1,
 				'order' => $container[self::LABEL_PREFIX . ".order"],
 				'image' => $container[self::LABEL_PREFIX . ".image"] ?: $container["image"],
 			]);
 		}, $containers);
+	}
+
+	private function convertType($type)
+	{
+		if ($type) {
+			switch (strtolower($type)) {
+				case "organizr":
+					$type = 0;
+					break;
+				case "iframe":
+					$type = 1;
+					break;
+				case "newwindow":
+					$type = 2;
+					break;
+				default:
+					$type = 1;
+			}
+		}
+		return $type;
+	}
+
+	private function convertGroup($group)
+	{
+		if (strtolower($group)) {
+			switch ($group) {
+				case "admin":
+					$group = 0;
+					break;
+				case "co-admin":
+					$group = 1;
+					break;
+				case "super user":
+					$group = 2;
+					break;
+				case "power user":
+					$group = 3;
+					break;
+				case "user":
+					$group = 4;
+					break;
+				case "guest":
+					$group = 999;
+					break;
+				default:
+					$group = 0;
+			}
+		}
+		return $group;
 	}
 
 	private function findOrCreateAutoOrganizrCategoryID()
@@ -246,9 +279,15 @@ class autoOrganizrPlugin extends Organizr
 						<th>false</th>
 					</tr>
 					<tr>
-						<th>' . self::LABEL_PREFIX . '.group_id</th>
-						<th>This is the id of the group to be added</th>
-						<th><code class="hidden-xs">null</code></th>
+						<th>' . self::LABEL_PREFIX . '.min_group_id</th>
+						<th>This is the name of the lower group to be added <code class="hidden-xs">admin, co-admin, super user, power user, user or guest</code></th>
+						<th><code class="hidden-xs">admin</code></th>
+						<th>false</th>
+					</tr>
+					<tr>
+						<th>' . self::LABEL_PREFIX . '.max_group_id</th>
+						<th>This is the name of the upper group to be added <code class="hidden-xs">admin, co-admin, super user, power user, user or guest</code></th>
+						<th><code class="hidden-xs">admin</code></th>
 						<th>false</th>
 					</tr>
 					<tr>
