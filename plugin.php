@@ -61,10 +61,10 @@ class autoOrganizrPlugin extends Organizr
 
 			if ($foundTab) {
 				$this->updateTab($foundTab["id"], $tab);
-				array_push($actions, ["type" => "Updated", "name" => $tab["name"]]);
+				array_push($actions, ["type" => "Updated", "name" => $tab["name"], "values" => $tab]);
 				continue;
 			}
-			array_push($actions, ["type" => "Added", "name" => $tab["name"]]);
+			array_push($actions, ["type" => "Added", "name" => $tab["name"], "values" => $tab]);
 			$this->addTab($tab);
 		}
 		return $actions;

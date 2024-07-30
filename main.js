@@ -34,6 +34,7 @@ function toggleAutoOrganizrPlugin() {
 								<tr>
 									<th>Name</th>
 									<th>Action</th>
+									<th>Values</th>
 								</tr>
 							</table>
 						</div>
@@ -52,14 +53,14 @@ function toggleAutoOrganizrPlugin() {
 function AutoOrganizrPluginSyncTabs() {
 	organizrAPI2('GET', 'api/v2/plugins/autoorganizr/synctabs').success(function ({ response: { data } }) {
 		$('.loadingautoOrganizr').remove();
-		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th></tr>`).join("");
+		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th><th><code>${update.values}</code></th></tr>`).join("");
 		$('#autoOrganizrTableList table').append(items);
 		$('#autoOrganizrTableList').removeClass("hidden")
 	}).fail(function (res) {
 		const { response: { message, data } } = res.responseJSON;
 
 		$('.loadingautoOrganizr').remove();
-		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th></tr>`).join("");
+		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th<th><code>${update.values}</code></th>></tr>`).join("");
 		$('#autoOrganizrTableList table').append(items);
 		$('#autoOrganizrTableList table').append(`<h3>Error: ${message}</h3>`);
 		$('#autoOrganizrTableList').removeClass("hidden")
