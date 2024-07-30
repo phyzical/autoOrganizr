@@ -154,7 +154,9 @@ class autoOrganizrPlugin extends Organizr
 				'type' => $this->convertType($container[self::LABEL_PREFIX . ".type"]) || 1,
 				'order' => $container[self::LABEL_PREFIX . ".order"],
 				'image' => $container[self::LABEL_PREFIX . ".image"] ?: $container["image"],
-			]);
+			], function ($item) {
+				return $item !== null && $item !== '';
+			});
 		}, $containers);
 	}
 
