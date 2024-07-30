@@ -29,6 +29,7 @@ function toggleAutoOrganizrPlugin() {
 						<h2 class="text-center loadingautoOrganizr" lang="en"><i class="fa fa-spin fa-spinner"></i></h2>
 						<div class="table-responsive autoOrganizrTableList hidden" id="autoOrganizrTableList">
 							<h3 class="text-center" lang="en">Actions</h3>
+							<p class="text-center"> If Unmanaged, you need to manually remove the tab to allow management</p>
 							<table class="table color-bordered-table purple-bordered-table text-left">
 								<tr>
 									<th>Name</th>
@@ -56,13 +57,11 @@ function AutoOrganizrPluginSyncTabs() {
 		$('#autoOrganizrTableList').removeClass("hidden")
 	}).fail(function (res) {
 		const { response: { message, data } } = res.responseJSON;
-		console.dir(message)
-		console.dir(data)
 
 		$('.loadingautoOrganizr').remove();
-		$('#autoOrganizrTableList table').append(`<h3>Error: ${message}</h3>`);
 		const items = data.map(update => `<tr><th>${update.name}</th><th>${update.type}</th></tr>`).join("");
 		$('#autoOrganizrTableList table').append(items);
+		$('#autoOrganizrTableList table').append(`<h3>Error: ${message}</h3>`);
 		$('#autoOrganizrTableList').removeClass("hidden")
 		OrganizrApiError(xhr);
 	});

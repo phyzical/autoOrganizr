@@ -40,8 +40,20 @@ class autoOrganizrPlugin extends Organizr
 
 	private function addTabs($tabs, $existingTabs)
 	{
+		$unManagedExistingTabs = $this->getUnManagedExistingTabs();
+
 		$actions = [];
 		foreach ($tabs as $tab) {
+			$foundTabs = array_filter($unManagedExistingTabs, function ($obj) use ($tab) {
+				return $obj["name"] == $tab["name"];
+			});
+			$foundTab = reset($foundTabs);
+			if ($foundTab) {
+				$this->updateTab($foundTab["id"], $tab);
+				array_push($actions, ["type" => "UnManaged", "name" => $tab["name"]]);
+				continue;
+			}
+
 			$foundTabs = array_filter($existingTabs, function ($obj) use ($tab) {
 				return $obj["name"] == $tab["name"];
 			});
@@ -79,6 +91,13 @@ class autoOrganizrPlugin extends Organizr
 	{
 		return array_filter($this->getAllTabs()["tabs"], function ($tab) {
 			return $tab["category_id"] == $this->findOrCreateAutoOrganizrCategoryID();
+		});
+	}
+
+	private function getUnManagedExistingTabs()
+	{
+		return array_filter($this->getAllTabs()["tabs"], function ($tab) {
+			return $tab["category_id"] != $this->findOrCreateAutoOrganizrCategoryID();
 		});
 	}
 
