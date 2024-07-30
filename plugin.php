@@ -8,7 +8,7 @@ $GLOBALS['plugins']['autoOrganizr'] = array( // Plugin Name
 	'license' => 'personal', // License Type use , for multiple
 	'idPrefix' => 'AUTOORGANIZR', // html element id prefix (All Uppercase)
 	'configPrefix' => 'AUTOORGANIZR', // config file prefix for array items without the hypen (All Uppercase)
-	'version' => '0.0.12', // SemVer of plugin
+	'version' => '0.0.13', // SemVer of plugin
 	'image' => 'data/plugins/autoOrganizr/logo.png', // 1:1 non transparent image for plugin
 	'settings' => true, // does plugin need a settings modal?
 	'bind' => true, // use default bind to make settings page - true or false
@@ -162,8 +162,9 @@ class autoOrganizrPlugin extends Organizr
 
 	private function convertType($type)
 	{
+		$type = strtolower($type);
 		if ($type) {
-			switch (strtolower($type)) {
+			switch ($type) {
 				case "organizr":
 					$type = 0;
 					break;
@@ -182,7 +183,8 @@ class autoOrganizrPlugin extends Organizr
 
 	private function convertGroup($group)
 	{
-		if (strtolower($group)) {
+		$group = strtolower($group);
+		if ($group) {
 			switch ($group) {
 				case "admin":
 					$group = 0;
