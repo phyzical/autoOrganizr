@@ -30,13 +30,15 @@ function toggleAutoOrganizrPlugin() {
 						<div class="table-responsive autoOrganizrTableList hidden" id="autoOrganizrTableList">
 							<h3 class="text-center" lang="en">Actions</h3>
 							<p class="text-center"> If Unmanaged, you need to manually remove the tab or add it to the AutoOrganizr category to allow management</p>
-							<table class="table color-bordered-table purple-bordered-table text-left">
-								<tr>
-									<th>Name</th>
-									<th>Action</th>
-									<th>Values</th>
-								</tr>
-							</table>
+							<div style="height: 500px; overflow-y: auto;">
+								<table class="table color-bordered-table purple-bordered-table text-left">
+									<tr>
+										<th>Name</th>
+										<th>Action</th>
+										<th>Values</th>
+									</tr>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
