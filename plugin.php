@@ -49,7 +49,6 @@ class autoOrganizrPlugin extends Organizr
 			});
 			$foundTab = reset($foundTabs);
 			if ($foundTab) {
-				$this->updateTab($foundTab["id"], $tab);
 				array_push($actions, ["type" => "Unmanaged", "name" => $tab["name"]]);
 				continue;
 			}
@@ -61,13 +60,23 @@ class autoOrganizrPlugin extends Organizr
 
 			if ($foundTab) {
 				$this->updateTab($foundTab["id"], $tab);
-				array_push($actions, ["type" => "Updated", "name" => $tab["name"], "values" => json_encode($tab)]);
+				array_push($actions, ["type" => "Updated", "name" => $tab["name"], "values" => $this->generateValuesHtml($tab)]);
 				continue;
 			}
-			array_push($actions, ["type" => "Added", "name" => $tab["name"], "values" => json_encode($tab)]);
+			array_push($actions, ["type" => "Added", "name" => $tab["name"], "values" => $this->generateValuesHtml($tab)]);
 			$this->addTab($tab);
 		}
 		return $actions;
+	}
+
+	private function generateValuesHtml($tab)
+	{
+		$htmlOutput = "<ul>\n";
+		foreach ($tab as $key => $value) {
+			$htmlOutput .= "<li><strong>$key</strong> => $value</li>\n";
+		}
+		$htmlOutput .= "</ul>";
+		return $htmlOutput;
 	}
 
 	private function removeTabs($tabs, $existingTabs)
