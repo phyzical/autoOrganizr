@@ -58,15 +58,35 @@ class autoOrganizrPlugin extends Organizr
 			});
 			$foundTab = reset($foundTabs);
 
+
 			if ($foundTab) {
-				$this->updateTab($foundTab["id"], $tab);
-				array_push($actions, ["type" => "Updated", "name" => $tab["name"], "values" => $this->generateValuesHtml($tab)]);
-				continue;
+				if ($this->tabDiffCheck($tab, $foundTab)) {
+					$this->updateTab($foundTab["id"], $tab);
+					array_push($actions, ["type" => "Updated", "name" => $tab["name"], "values" => $this->generateValuesHtml($tab)]);
+					continue;
+				} else {
+					array_push($actions, ["type" => "No Changes", "name" => $tab["name"], "values" => "N/A"]);
+					continue;
+				}
 			}
 			array_push($actions, ["type" => "Added", "name" => $tab["name"], "values" => $this->generateValuesHtml($tab)]);
 			$this->addTab($tab);
 		}
 		return $actions;
+	}
+
+	private function tabDiffCheck($tab, $foundTab)
+	{
+		$changes = false;
+		foreach ($tab as $key => $value) {
+			if ($value !== $foundTab[$key]) {
+				echo "The change isss $key => $value -> $foundTab[$key]";
+				$changes = true;
+				break;
+			}
+		}
+
+		return $changes;
 	}
 
 	private function generateValuesHtml($tab)
@@ -91,7 +111,7 @@ class autoOrganizrPlugin extends Organizr
 		$actions = [];
 		foreach ($tabsForRemoval as $tab) {
 			$this->deleteTab($tab["id"]);
-			array_push($actions, ["type" => "Removed", "name" => $tab["name"]]);
+			array_push($actions, ["type" => "Removed", "name" => $tab["name"], "values" => "N/A"]);
 		}
 		return $actions;
 	}
@@ -123,7 +143,13 @@ class autoOrganizrPlugin extends Organizr
 				$labels = array_filter($container["Labels"], function ($val, $key) {
 					return str_contains($key, "organizr");
 				}, ARRAY_FILTER_USE_BOTH);
-				$port = reset($container["Ports"])["PublicPort"];
+				$ports = array_filter(
+					array_map(function ($port) {
+						return $port["PublicPort"];
+					}, $container["Ports"])
+				);
+				sort($ports);
+				$port = reset($ports);
 				$name = ltrim(reset($container["Names"]), "/");
 				$domain = $this->config[self::PLUGIN_PREFIX . '-defaultDomain'];
 				$url = null;
@@ -134,7 +160,7 @@ class autoOrganizrPlugin extends Organizr
 					"name" => $name,
 					"labels" => $labels,
 					"url" => $url,
-					"local_url" => "http://$name:$port",
+					"url_local" => "http://$name:$port",
 					"image" => $container["Labels"]["net.unraid.docker.icon"]
 				];
 			}, json_decode($response->body, true));
@@ -151,22 +177,41 @@ class autoOrganizrPlugin extends Organizr
 	private function mapContainersToTabs($containers)
 	{
 		return array_map(function ($container) {
+			$labels = $container["labels"];
 			return array_filter([
-				"name" => $container[self::LABEL_PREFIX . ".name"] ?: $container["name"],
-				"url" => $container[self::LABEL_PREFIX . ".url"] ?: $container["url"],
-				"local_url" => $container[self::LABEL_PREFIX . ".local_url"] ?: $container["local_url"],
-				"group_id" => $this->convertGroup($container[self::LABEL_PREFIX . ".min_group_id"]) ?: 0,
-				"max_group_id" => $this->convertGroup($container[self::LABEL_PREFIX . ".max_group_id"]) ?: 0,
+				"name" => $labels[self::LABEL_PREFIX . ".name"] ?: $container["name"],
+				"url" => $labels[self::LABEL_PREFIX . ".url"] ?: $container["url"],
+				"url_local" => $labels[self::LABEL_PREFIX . ".url_local"] ?: $container["url_local"],
+				"group_id" => $this->convertGroup($labels[self::LABEL_PREFIX . ".min_group_id"]) ?: 0,
+				"group_id_max" => $this->convertGroup($labels[self::LABEL_PREFIX . ".group_id_max"]) ?: 0,
 				'category_id' => $this->findOrCreateAutoOrganizrCategoryID(),
-				'enabled' => $container[self::LABEL_PREFIX . ".enabled"] ?: true,
-				'default' => $container[self::LABEL_PREFIX . ".default"],
-				'type' => $this->convertType($container[self::LABEL_PREFIX . ".type"]) ?: 1,
-				'order' => $container[self::LABEL_PREFIX . ".order"],
-				'image' => $container[self::LABEL_PREFIX . ".image"] ?: $container["image"],
+				'enabled' => $this->convertBoolean($labels[self::LABEL_PREFIX . ".enabled"]) ?: 1,
+				'default' => $this->convertBoolean($labels[self::LABEL_PREFIX . ".default"]) ?: 0,
+				'type' => $this->convertType($labels[self::LABEL_PREFIX . ".type"]) ?: 1,
+				'order' => $labels[self::LABEL_PREFIX . ".order"] ? intval($labels[self::LABEL_PREFIX . ".order"]) : null,
+				'image' => $labels[self::LABEL_PREFIX . ".image"] ?: $container["image"],
 			], function ($item) {
 				return $item !== null && $item !== '';
 			});
 		}, $containers);
+	}
+
+	private function convertBoolean($boolean)
+	{
+		$boolean = strtolower($boolean);
+		if ($boolean) {
+			switch ($boolean) {
+				case "true":
+					$boolean = 1;
+					break;
+				case "false":
+					$boolean = 0;
+					break;
+				default:
+					$boolean = 0;
+			}
+		}
+		return $boolean;
 	}
 
 	private function convertType($type)
@@ -286,7 +331,7 @@ class autoOrganizrPlugin extends Organizr
 						<th>false</th>
 					</tr>
 					<tr>
-						<th>' . self::LABEL_PREFIX . '.local_url</th>
+						<th>' . self::LABEL_PREFIX . '.url_local</th>
 						<th>The local url to use for the tab</th>
 						<th>Defaults to <code class="hidden-xs">http://{container_name}:{FIRST_LOCAL_PORT}</code></th>
 						<th>false</th>
@@ -298,7 +343,7 @@ class autoOrganizrPlugin extends Organizr
 						<th>false</th>
 					</tr>
 					<tr>
-						<th>' . self::LABEL_PREFIX . '.max_group_id</th>
+						<th>' . self::LABEL_PREFIX . '.group_id_max</th>
 						<th>This is the name of the upper group to be added <code class="hidden-xs">admin, co-admin, super user, power user, user or guest</code></th>
 						<th><code class="hidden-xs">admin</code></th>
 						<th>false</th>
