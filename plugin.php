@@ -80,7 +80,7 @@ class autoOrganizrPlugin extends Organizr
 		$changes = false;
 		foreach ($tab as $key => $value) {
 			if ($value !== $foundTab[$key]) {
-				echo "The change isss $key => $value -> $foundTab[$key]";
+				// echo "The change isss $key => $value -> $foundTab[$key]";
 				$changes = true;
 				break;
 			}
