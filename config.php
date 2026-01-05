@@ -5,7 +5,7 @@
  */
 return array(
 	'AUTOORGANIZR-enabled' => false,
-	'AUTOORGANIZR-defaultDomain' => null,
+	'AUTOORGANIZR-defaultDomain' => "",
 	'AUTOORGANIZR-dockerProxyHost' => "http://docker:2375",
 	'AUTOORGANIZR-cronRunEnabled' => true,
 	'AUTOORGANIZR-cronRunSchedule' => "0 * * * *",
